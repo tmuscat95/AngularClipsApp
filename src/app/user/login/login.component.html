@@ -1,27 +1,57 @@
+<!-- Template Driven Form;
+API Built on top of reactive forms, simpler and quicker to set up but not ideal
+for more complex forms; for that use Reactive Forms directly-->
 <!-- Login Form -->
-<form>
+<!-- Template Variables: attributes starting with # in form tag are bound to the form
+object. My default this has type of HtmlFormElement ie: a vanilla html form DOM object, unless it is assigned to as below-->
+<form #loginForm="ngForm" (ngSubmit)="login()">
   <!-- Email -->
   <div class="mb-3">
     <label class="inline-block mb-2">Email</label>
+    <!-- [(ngModel)] creates a two way binding on the fields with the credentials
+    object defined in the class [()] syntax means the field value is bound to the object
+  defined in the class and will change according to it whilst also changing it when the form value is changed.
+this object can only be accessed inside this component file.-->
     <input
+      #email="ngModel"
+      [(ngModel)]="credentials.email"
+      name="email"
       type="email"
       class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
       placeholder="Enter Email"
+      required
+      pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
     />
+    <!-- email is a formcontrol object when assigned to "ngModel"-->
+    <p *ngIf="email.errors && email.touched && email.dirty" class="text-red-400">
+      Email is invalid.
+    </p>
   </div>
   <!-- Password -->
   <div class="mb-3">
     <label class="inline-block mb-2">Password</label>
     <input
+      #password="ngModel"
+      required
+      [(ngModel)]="credentials.password"
+      name="password"
       type="password"
       class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
       placeholder="Password"
     />
+    <p *ngIf="password.errors && password.touched && password.dirty" class="text-red-400">
+      Password is invalid.
+    </p>
   </div>
   <button
     type="submit"
-    class="block w-full bg-indigo-400 text-white py-1.5 px-3 rounded transition hover:bg-indigo-500"
-  >
+    class="disabled:opacity-50 disabled:bg-indigo-400 block w-full bg-indigo-400 text-white py-1.5 px-3 rounded transition hover:bg-indigo-500"
+    [disabled]="!loginForm.valid"
+    >
     Submit
   </button>
 </form>
+<div>
+  Form is Valid: {{ loginForm.valid }}
+  <!--Here we access an ngForm attribute -->
+</div>
